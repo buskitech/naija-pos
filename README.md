@@ -3,8 +3,7 @@
 A secure, offline-first POS system designed for Nigerian local businesses. Built with modern web technologies and Firebase backend.
 
 
-
-## ✨ Features
+ ✨ Features
 
 - **🔐 Role-Based Access Control**: Separate Admin and Staff dashboards
 - **📦 Inventory Management**: Add, edit, delete products with stock tracking
@@ -15,22 +14,17 @@ A secure, offline-first POS system designed for Nigerian local businesses. Built
 - **📱 Responsive Design**: Works on all devices
 - **⚡ Offline-First**: Built as a PWA for unreliable connections
 
-## 🛡️ Security Features
-
-Following the **"Vibecode Safely"** best practices:
+🛡️ Security Features
 
 - ✅ Firebase Authentication (Email/Password)
 - ✅ Firestore Security Rules (Role-based access)
 - ✅ XSS Protection (HTML sanitization)
 - ✅ Input Validation (Server-side rules + client-side)
 - ✅ Rate Limiting (Checkout abuse prevention)
-- ✅ **Environment Variables** (Credentials never committed to Git)
 - ✅ Pre-commit Security Checks (Automated scanning)
 - ✅ Audit trail (Sales cannot be edited/deleted)
 
-📖 **Security Guide**: See [SECURITY.md](SECURITY.md) and [ENV_SETUP.md](ENV_SETUP.md) for complete security documentation.
-
-## 🚀 Quick Start
+🚀 Quick Start
 
 ### Prerequisites
 - A Firebase account ([console.firebase.google.com](https://console.firebase.google.com/))
@@ -106,8 +100,6 @@ naija-pos/
 ├── js/
 │   ├── app.js          # Main app logic, routing
 │   ├── auth.js         # Authentication handling
-│   ├── env.js          # 🔒 Firebase credentials (GITIGNORED)
-│   ├── env.example.js  # Environment template
 │   ├── firebase-config.js  # Firebase initialization
 │   ├── inventory.js    # Admin inventory management
 │   ├── sales.js        # Staff sales terminal
@@ -116,12 +108,10 @@ naija-pos/
 ├── firestore.rules     # Firestore security rules
 ├── storage.rules       # Storage security rules
 ├── service-worker.js   # PWA offline support
-├── .gitignore          # Git ignore (includes env.js)
+├── .gitignore          # Git ignore
 ├── pre-commit-check.sh # Security check script
 ├── safe-commit.sh      # Interactive safe commit tool
 ├── SECURITY.md         # Security policy
-├── ENV_SETUP.md        # Environment setup guide
-├── SAFE_COMMIT_GUIDE.md # Safe Git commit guide
 └── README.md           # This file
 ```
 
@@ -160,15 +150,13 @@ naija-pos/
 }
 ```
 
-## 🔒 Security Rules
-
-See `firestore.rules` and `storage.rules` for detailed access control:
+🔒 Security Rules
 
 - **Products**: Authenticated users can read/update; only Admins can create/delete
 - **Sales**: Authenticated users can create; only Admins can read; no edits/deletes allowed
 - **Users**: Users can only access their own documents; Admins can read all
 
-## 🛠️ Tech Stack
+ 🛠️ Tech Stack
 
 - **Frontend**: HTML5, Tailwind CSS, Vanilla JavaScript
 - **Backend**: Firebase (Authentication, Firestore, Storage)
@@ -176,11 +164,11 @@ See `firestore.rules` and `storage.rules` for detailed access control:
 - **Offline**: Service Workers (PWA)
 
 
-## 📄 License
+📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+🙏 Acknowledgments
 
 - Designed for Nigerian small businesses
 - Inspired by the need for simple, secure POS solutions
