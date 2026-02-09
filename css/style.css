@@ -1,0 +1,74 @@
+/* Custom styles for NaijaPOS */
+
+/* Smooth transitions for theme switching */
+* {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Custom scrollbar for dark mode */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #475569;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Ensure images don't break layout */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Modal backdrop blur effect */
+#modal-overlay {
+    backdrop-filter: blur(4px);
+}
+
+/* Prevent text selection on buttons */
+button {
+    user-select: none;
+}
+
+/* Focus styles for accessibility */
+input:focus,
+select:focus,
+button:focus {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+}
+
+.dark input:focus,
+.dark select:focus,
+.dark button:focus {
+    outline-color: #818cf8;
+}

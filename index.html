@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local POS - Nigeria</title>
+    <!-- Tailwind CSS for modern, responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body
+    class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-['Inter'] transition-colors duration-200">
+
+    <!-- Navigation / Header -->
+    <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">NaijaPOS</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle"
+                        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path
+                                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                                fill-rule="evenodd" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                    <!-- Sync Status -->
+                    <div id="sync-status" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                        Online
+                    </div>
+                    <!-- User Profile / Logout -->
+                    <div id="user-nav" class="hidden flex items-center space-x-2">
+                        <span id="user-role-badge"
+                            class="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200"></span>
+
+                        <!-- Edit Profile Button -->
+                        <button id="edit-profile-btn"
+                            class="p-1 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                            title="Edit Profile">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                </path>
+                            </svg>
+                        </button>
+
+                        <button id="logout-btn"
+                            class="text-sm font-medium text-red-600 hover:text-red-500">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Auth Section -->
+        <section id="auth-section" class="max-w-md mx-auto mt-12">
+            <div
+                class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
+                <h2 class="text-2xl font-bold mb-6 text-center">Welcome Back</h2>
+                <form id="login-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Email Address</label>
+                        <input type="email" id="login-email" required
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Password</label>
+                        <div class="relative">
+                            <input type="password" id="login-password" required
+                                class="w-full pl-4 pr-10 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                            <button type="button" id="toggle-password"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none">
+                                <!-- Eye Icon -->
+                                <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                    </path>
+                                </svg>
+                                <!-- Eye Off Icon (Hidden initially) -->
+                                <svg id="eye-off-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg transition-colors shadow-lg shadow-indigo-200 dark:shadow-none">
+                        Login to Dashboard
+                    </button>
+                </form>
+                <p id="auth-error" class="mt-4 text-sm text-red-600 text-center hidden"></p>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard Section (Hidden by default) -->
+        <section id="admin-dashboard" class="hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+                <button id="add-product-btn"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                    + Add New Product
+                </button>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Total Sales Today</p>
+                    <p id="total-sales-today" class="text-2xl font-bold mt-1">₦0.00</p>
+                </div>
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Low Stock Items</p>
+                    <p id="low-stock-count" class="text-2xl font-bold mt-1 text-orange-500">0</p>
+                </div>
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Expired Items</p>
+                    <p id="expired-count" class="text-2xl font-bold mt-1 text-red-500">0</p>
+                </div>
+            </div>
+
+            <!-- Inventory Table -->
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                    <h3 class="font-bold">Inventory Management</h3>
+                    <input type="text" placeholder="Search products..."
+                        class="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 bg-transparent text-sm">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead
+                            class="bg-gray-50 dark:bg-gray-700 text-xs uppercase font-semibold text-gray-500 dark:text-gray-400">
+                            <tr>
+                                <th class="px-6 py-3">Product Name</th>
+                                <th class="px-6 py-3">Stock</th>
+                                <th class="px-6 py-3">Price</th>
+                                <th class="px-6 py-3">Expiry</th>
+                                <th class="px-6 py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-list" class="divide-y divide-gray-100 dark:divide-gray-700">
+                            <!-- Products will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sales History Section -->
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                    <h3 class="font-bold">Sales History</h3>
+                    <div class="flex space-x-2">
+                        <button id="download-sales-btn"
+                            class="text-sm bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200 px-3 py-1 rounded-md hover:bg-indigo-100 dark:hover:bg-indigo-800 transition-colors flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            Download Report
+                        </button>
+                        <select id="staff-filter"
+                            class="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 bg-transparent text-sm">
+                            <option value="">All Staff</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead
+                            class="bg-gray-50 dark:bg-gray-700 text-xs uppercase font-semibold text-gray-500 dark:text-gray-400">
+                            <tr>
+                                <th class="px-6 py-3">Date & Time</th>
+                                <th class="px-6 py-3">Staff Member</th>
+                                <th class="px-6 py-3">Items</th>
+                                <th class="px-6 py-3">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sales-list" class="divide-y divide-gray-100 dark:divide-gray-700">
+                            <!-- Sales will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Staff Dashboard Section (Hidden by default) -->
+        <section id="staff-dashboard" class="hidden space-y-6">
+            <h1 class="text-3xl font-bold">Sales Terminal</h1>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Product Selection -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div
+                        class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <input type="text" id="product-search" placeholder="Search product to sell..."
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <!-- Product cards for quick selection -->
+                    </div>
+                </div>
+
+                <!-- Cart / Checkout -->
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 h-fit sticky top-24">
+                    <h3 class="font-bold text-lg mb-4">Current Sale</h3>
+                    <div id="cart-items" class="space-y-3 mb-6 max-h-64 overflow-y-auto">
+                        <!-- Cart items will appear here -->
+                        <p class="text-gray-500 text-center py-4">Cart is empty</p>
+                    </div>
+                    <div class="border-t border-gray-100 dark:border-gray-700 pt-4 space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span>Subtotal</span>
+                            <span id="cart-subtotal">₦0.00</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-xl">
+                            <span>Total</span>
+                            <span id="cart-total">₦0.00</span>
+                        </div>
+                    </div>
+                    <button id="checkout-btn" disabled
+                        class="w-full mt-6 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white font-bold py-3 rounded-xl transition-colors">
+                        Complete Sale
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modals (Add Product, etc.) -->
+    <div id="modal-overlay"
+        class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <div id="modal-content">
+                <!-- Dynamic modal content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Popup (Hidden by default) -->
+    <div id="success-popup"
+        class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4 pointer-events-none">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-green-100 dark:border-green-900 p-8 transform transition-all scale-95 opacity-0 pointer-events-auto max-w-sm w-full text-center">
+            <div
+                class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Sale Successful!</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-6" id="success-popup-message"></p>
+            <button id="success-popup-close"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-colors">
+                Continue Selling
+            </button>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/admin-sales.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker failed', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
