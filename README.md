@@ -2,7 +2,7 @@
 
 A secure, offline-first POS system designed for Nigerian local businesses. Built with modern web technologies and Firebase backend.
 
-![NaijaPOS Screenshot](assets/screenshot.png)
+
 
 ## ✨ Features
 
@@ -175,9 +175,6 @@ See `firestore.rules` and `storage.rules` for detailed access control:
 - **PDF Generation**: jsPDF + AutoTable
 - **Offline**: Service Workers (PWA)
 
-## 📝 Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
@@ -185,10 +182,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Built following the **"Vibecode Safely"** guide by Ebube Maduike
 - Designed for Nigerian small businesses
 - Inspired by the need for simple, secure POS solutions
 
----
-
-**Made with ❤️ for Nigerian entrepreneurs**
